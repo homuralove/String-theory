@@ -1,0 +1,392 @@
+\documentclass[10pt]{jsarticle}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{braket}
+\usepackage{bm,latexsym,amsmath,amssymb,amsfonts,mathrsfs}
+\usepackage{tensor}
+\usepackage{comment}
+%\usepackage{physics}
+\usepackage[dvipdfmx,linktocpage=true]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{color}
+\usepackage{here}
+\input{colordvi.tex}
+
+\setcounter{tocdepth}{3}%目次にsubsubsectionまで入れる
+
+
+\newcommand{\kakko}[1]{\left(#1 \right)} %丸括弧()
+\newcommand{\kkakko}[1]{\left[ #1 \right]} %角括弧[]
+\newcommand{\nkakko}[1]{\left\{ #1 \right\}} %波括弧{}
+\newcommand{\p}[1]{\left| #1 \right|} %縦棒||
+\newcommand{\henbi}[2]{{\frac{\partial#1}{\partial#2}}} %偏微分
+\newcommand{\bi}[2]{{\frac{d #1}{d #2}}} %微分
+
+\newcommand{\del}{{\partial}} %偏微分の∂
+\newcommand{\skakko}[1]{$\ll$#1$\gg$}
+\newcommand{\vc}[1]{\overrightarrow{#1}}% 矢印ベクトル
+\newcommand{\vct}[1]{\bm{#1}}%太字ベクトル
+\newcommand{\sint}[1]{\int\mathcal{D}#1\,}%経路積分
+\newcommand{\pms}[1]{\mathcal{D}#1\,}%経路積分の測度
+
+%\newcommand{\Res}{\mathrm{Res}}
+\renewcommand{\Im}{\mathrm{Im\,}}
+\renewcommand{\Re}{\mathrm{Re\,}}
+\DeclareMathOperator*{\Res}{Res}
+
+
+\topmargin=0.0in
+\headsep=0.0in
+\headheight=0.0in
+\oddsidemargin=-0.22in
+\evensidemargin=-0.22in
+\textwidth=6.5in
+\textheight=9.0in
+\title{The Polyakov Path Integral and Ghosts}
+\author{@homuotaku}
+\date{\today}
+\pagestyle{empty}
+\begin{document}
+\maketitle
+\tableofcontents
+\setcounter{section}{4}
+\section{The Polyakov Path Integral and Ghosts}
+共形対称性には2次元の背景が固定されているか力学変数として動くもの使うかによって異なる解釈がある。
+統計力学への応用では背景は固定されているので共形対称性は大域的な対称性である。
+弦理論においては背景は力学的(力学変数として振る舞う、の意味)である。共形対称性はゲージ対称性であり、微分同相とWeyl不変の残りである。
+ゲージ対称性とは対称性ではなく系を記述する際の冗長性である\footnote{電磁気では理論からどうしてもゲージ不変であった、みたいな感じ？}。
+そのためそれらを失う余地はなく、量子論においてアノマリーが生じないことが必須となる。
+最悪、ゲージアノマリーのある理論は意味をなさない。例えば、左巻き基本フェルミオンだけと結合したYang-Mills理論はこの意味で無意味である。
+量子論を復元することができるかもしれないが、始めの理論とは関係がないものとなる。
+
+前の章の話と合わせて考えると大変らしい。Weyl対称性はアノマリーである。
+エネルギー運動量テンソルの期待値がWeyl対称性で結ばれた背景で異なる値を取るためだ。すなわち、
+\begin{equation}
+  \braket{T^{\alpha}\!{}_{\alpha}}=-\frac{c}{12}R 
+\end{equation}
+ここで$R$はRicciスカラー。
+固定された背景において、これはただ面白いだけだが、力学的な背景においては致命的である。\footnote{その計量ごとに違うエネルギー運動量テンソルを出すため。}
+どうすればいいのだろうか。
+$c=0$なら解決される。しかし全ての非自明なユニタリCFTでは$c>0$である。
+抜け穴を探りたい。
+$c=0$の要請を実現するための理にかなった方法がある。
+\subsection{The Path Integral}
+Euclid空間でPolyakov作用は
+\begin{equation}
+  S_{P}=\frac{1}{4\pi \alpha}\int d^{2}\sigma \sqrt{g}g^{\alpha \beta}\del_{\alpha}X^{\mu}\del_{\beta}X^{\nu}\delta_{\mu\nu}
+\end{equation}
+以下、経路積分で解析する。 すべての埋め込み座標$X^{\mu}$と世界面計量$g_{\alpha \beta}$について積分する。概略的には
+\begin{equation}
+  Z=\frac{1}{\mathrm{Vol}}\int \mathcal{D}g\mathcal{D}X \, e^{-S_{P}[X,g]}
+\end{equation}
+この''Vol''が重要。すべての場の配位について積分するわけではなく、微分同相やWeylに関係するところのみを積分するということを意味する。
+場の空間におけるゲージの作用の体積で割り算する必要があるということである。
+この状況をもっとあらわに表せば、すべての場の配位に渡る積分を2つの部分に分ける必要がある。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.3\linewidth]{img/fig30.png}
+  \caption{実線のように様々なゲージ自由度がある中で、その自由度の分だけ取り除いて、ゲージ固定した点線部分のみの積分がほしい。}
+  \label{fig30}
+\end{figure}
+
+
+物理的な配位に対応する、概略的には図において点線で書かれている部分と、ゲージ変換に対応する実線部分である。
+すなわち''Vol''で割ることは、単にこの実線部のゲージ軌道の積分より現れる分配関数での部分を取り除くことである。
+通常の積分では、座標を変換したときヤコビアンを拾うことになるので注意が要る。
+経路積分でも違いはない。この積分変数を物理的な場とゲージ軌道に分解したい。
+求めるヤコビアンが問題なのだが、Faddeev-Popovによって決定する方法が発見されている。
+この方法はYang-Millsを含む全てのゲージ対称性に対して有用で、Advanced Quantum Field Theoryコースでも学ぶ。
+\subsubsection{The Faddeev-Popov Method}
+- ゲージ不変な成分を分離する方法
+
+
+ここで2つのゲージ対称性がある。すなわち、微分同相とWeyl変換である。これらを$\zeta$で表す。
+一般のゲージ変換に対する計量の変化を$g\to g^{\zeta}$である。
+これは
+\begin{equation}
+  g_{\alpha\beta}(\sigma)\to g^{\zeta}_{\alpha\beta}(\sigma')=e^{2\omega(\sigma)}\henbi{\sigma^{\gamma}}{\sigma'^{\alpha}}\henbi{\sigma^{\delta}}{\sigma'^{\beta}}g_{\gamma\delta }(\sigma)
+\end{equation}
+の短縮である。
+2次元ではこれらのゲージ対称性で、計量を例えば$\hat{g}$のように好きな形に置くことができる。
+これは基準計量(fiducial metric)\footnote{訳あってるかな}といい、選んだゲージ固定を表す。
+注意事項が2つある。
+\begin{itemize}
+  \item まず、どんな2次元計量も我々の選択の$\hat{g}$の形にできるというのは正しくない。
+  これは局所的にのみ正しい。大域的には、世界面が円筒または球面のトポロジーを持つときに正しくて、高次の種数(genus)ではダメ。
+  \item 次に、局所的に計量を$\hat{g}$に固定することはすべてのゲージ対称性を固定することではない。まだ行える共形対称性がある。以上2つの問題についてはSection6でやる。
+\end{itemize}
+
+目標は物理的に等価でない配位についてのみ積分することである。これを成し遂げるためにまず$\hat{g}$のゲージ軌道についての積分を考える。
+ゲージ変換$\zeta$のいくつかの値について、配位$g^{\zeta}$はもとの計量$g$と一致する。デルタ関数を用いて
+\begin{equation}
+ \label{5.1} \int \mathcal{D}\zeta \,\delta(g-\hat{g}^{\zeta})=\Delta^{-1}_{FP}[g]
+\end{equation}
+が得られる。\footnote{デルタ関数の中身は変換先と元のところが一致することを表したいのでこれでいい。}ヤコビアンを考慮することからこの積分は1に等しくはならない。
+これは$\int dx\delta(f(x))=1/|f'|$の類推である。上の等式において、このヤコビアン因子$\Delta^{-1}_{FP}[g]$と書いた。これの逆数$\Delta_{FP}[g]$は{\bf Faddeev-Popov行列式}と呼ばれる。このあとすぐあらわに評価する。
+コメント:
+\begin{itemize}
+  \item この全体の手順はかなり形式的で、経路積分を定義しようとするといつもの困難にぶつかる。しかしYang-Mills理論と同様にいい答えが得られるとわかるだろう。
+  \item ここではゲージ固定がうまくいっていると仮定する。つまり、前の図\ref{fig30}は物理的に異なる配位を正確に一度だけ切り取る。同様に、ゲージ変換全体に渡る積分$\mathcal{D}\zeta$はデルタ関数と一度だけ触れ、離散的な多義性を考慮しないでよい。(QCDではGribovコピーとして知られる)
+  \item 測度はLie群についてのHaar測度の類推とみなせて、左右不変である。
+  \begin{equation}
+    \mathcal{D}\zeta=\mathcal{D}(\zeta'\zeta)=\mathcal{D}(\zeta\zeta')
+  \end{equation}
+\end{itemize}
+Yang-Mills理論におけるゲージ固定のとき、まずやることはFaddeev-Popov行列式$\Delta_{FP}$がゲージ不変であることを示すことである。
+しかし我々のたどる道はもう少し微妙である。上で強調したように、Weylアノマリーはもとの理論が実はゲージ不変であらざることを意味する。
+Faddeev-Popov行列式もうまくいかないが、ある状況下ではwell-definedな理論を残してもとの失敗をキャンセルすることができる。
+Faddeev-Popovの手順は経路積分中に1を挿入することから始める。
+\begin{equation}
+  1=\Delta_{FP}[g]\int \mathcal{D}\zeta \delta(g-\hat{g}^{\zeta})
+\end{equation}
+経路積分の結果を$Z[\hat{g}]$とする。なぜならば基準計量$\hat{g}$に依存するため。
+まずデルタ関数$\delta(g-\hat{g}^{\zeta})$を用いて計量についての積分をする。\footnote{通常のデルタ関数の扱いと同じようにその値だけ抜き出す。}
+\begin{align}
+  Z[\hat{g}]&=\frac{1}{\mathrm{Vol}}\sint{\zeta}\mathcal{D}X\mathcal{D}g\Delta_{FP}[g]\delta(g-\hat{g}^{\zeta})e^{S_{P}[X,g]}\\
+  \label{5.2}&=\frac{1}{\mathrm{Vol}}\sint{\zeta}\mathcal{D}X\Delta_{FP}[\hat{g}^{\zeta}]e^{S_{P}[X,\hat{g}^{\zeta}]}
+\end{align}
+この段階では積分は$\hat{g}^{\zeta}$に依存する。式中の全ては微分同相のもとで不変であるが、Weyl変換については別問題である。
+量子論において$\sint{X}e^{-S_{P}}$はWeylアノマリーに苦しめられる。作用$S_{P}$はWeylリスケーリングで不変であり、その微妙さは測度からくる。一方、起こると予想すると、Faddeev-Popov行列式$\Delta_{FP}$で似た問題を見つけることになる。
+
+しかしもしこの問題がキャンセルされるような幸運な状況になればうまくいくだろう。
+そのとき(\ref{5.2})の右辺にあるものは微分同相とWeyl変換の両方で不変であるということがわかり、$\zeta$を書かない形で表せる。
+\begin{equation}
+  Z[\hat{g}]=\frac{1}{\mathrm{Vol}}\sint{\zeta}\mathcal{D}X\Delta_{FP}[\hat{g}]e^{-S_{P}[X,\hat{g}]}
+\end{equation}
+ゲージ変換に関する部分はなくなり、$\zeta$積分はゲージ軌道の''Vol''とキャンセルされる。
+\begin{equation}
+ \label{5.3} Z[\hat{g}]=\sint{X}\Delta_{FP}[\hat{g}]e^{-S_{P}[X,\hat{g}]}
+\end{equation}
+これは物理的に異なる配位に関する積分となり、Faddeev-Popov行列式はまさに必要としているヤコビアン因子であることがわかる。
+
+上記の議論は(\ref{5.2})の理論が真にWeyl不変であるような場合にのみ成り立つ。
+次にやることはこれがいつ起こるかを理解することである。つまり、Weyl変換を行ったときに$\Delta_{FP}$がどうなるかを知る必要がある。
+\subsubsection{The Faddeev-Popov Determinant}
+まだ$\Delta_{FP}[\hat{g}]$を計算しなければならない。単位元に近いゲージ変換$\zeta$を見てみよう。
+この場合、デルタ関数$\delta(g-\hat{g}^{\zeta})$は計量$g$が基準計量$\hat{g}$に近いとき非ゼロとなる。
+実際は、$\zeta=0$のとき非ゼロになるデルタ関数だけ見れば十分である。
+無限小Weyl変換$\omega(\sigma)$と無限小微分同相$\delta \sigma^{\alpha}=v^{\alpha}(\sigma)$をとる。
+計量の変化は座標をあわせることに注意して
+\begin{equation}
+  \delta \hat{g}_{\alpha\beta}=2\omega \hat{g}_{\alpha\beta} +\nabla_{\alpha}v_{\beta}+\nabla_{\beta}v_{\alpha}
+\end{equation}
+であるから
+\begin{equation}
+  \int \mathcal{D}\zeta \,\delta(g-\hat{g}^{\zeta})=\Delta^{-1}_{FP}[g] \notag
+\end{equation}
+に代入し、今は単位元付近を見るから、ゲージ群全体の積分$\mathcal{D}\zeta$を群のLie代数での積分$\mathcal{D}\omega\mathcal{D}v$に置き換える。Faddeev-Popov行列式は次のような形となる。
+\begin{equation}
+ \label{5.4} \Delta^{-1}_{FP}[\hat{g}]=\int\mathcal{D}\omega\mathcal{D}v\,\delta(2\omega \hat{g}_{\alpha\beta} +\nabla_{\alpha}v_{\beta}+\nabla_{\beta}v_{\alpha})
+\end{equation}
+
+
+この段階ではデルタ関数をFourier積分形式であらわしておくと便利である。なお、ここでは汎関数であることに注意する。
+世界面上の対称2階テンソル$\beta^{\alpha\beta}$を用いて、\footnote{なぜこれを入れる必要があるのか？$\delta(x)=\int dp e^{ipx}$の積分変数$p$に値し、$xp=\sum x_{i}p_{i}$}
+\begin{equation}
+\Delta^{-1}_{FP}[\hat{g}]=\int\mathcal{D}\omega\mathcal{D}v\mathcal{D}\beta \,\exp \kkakko{2\pi i\int d^{2}\sigma \sqrt{\hat{g}}\beta^{\alpha\beta} (2\omega \hat{g}_{\alpha\beta} +\nabla_{\alpha}v_{\beta}+\nabla_{\beta}v_{\alpha})}
+ \end{equation}
+Fourier積分では全ての空間を張るからそれを世界面全体に拡張しようとすると指数関数内部にこの積分がいるのかも。
+
+ここで$\sint{\omega}$積分を行う。微分はついてないので
+\begin{equation}
+  \beta^{\alpha\beta}\hat{g}_{\alpha\beta}=0
+\end{equation}
+と設定し、Lagrange乗数\footnote{未定乗数法を使いたいから$\beta^{\alpha\beta}$を導入したのか？}
+としてはたらく。言い換えれば、$\omega$積分をしたあとで$\beta^{\alpha\beta}$は対称でトレースレスとなる。世界面上の2階対称テンソルというのは設定で、ここではトレースレスということがわかる。→デルタ関数の中身だから$=0$だけを見るということを言ってる。
+これを$\beta^{\alpha\beta}$の定義とみなす。したがって
+
+\begin{equation}
+  \Delta^{-1}_{FP}[\hat{g}]=\int\mathcal{D}v\mathcal{D}\beta \,\exp \kkakko{４\pi i\int d^{2}\sigma \sqrt{\hat{g}}\beta^{\alpha\beta} \nabla_{\alpha}v_{\beta}}
+\end{equation}
+を得る。
+\subsubsection{Ghosts}
+前節で$\Delta_{FP}^{-1}$の式を得たが、我々はこれの逆数$\Delta_{FP}$がほしい。これを成し遂げるための簡単な方法がある。
+積分は$v,\beta$についての2次形式なので、積分は演算子$\nabla_{\alpha}$の行列式の逆数を計算する。\footnote{Green関数みたいな感じだと思う。→行列のガウス積分}
+正確には、対称トレースレステンソルへの射影の行列式の逆数を計算する。この観察は重要である。
+なぜならばrelevant演算子は行列式について語るのに必要な正方行列であることを意味するので。\footnote{雑に和訳したが要するに行列のガウス積分\begin{equation}  \int dq_{1}\cdots dq_{N}\,\exp\kakko{-\frac{1}{2}\sum q_{i}A_{ij}q_{j}}\sim (\det A)^{-1/2}\end{equation}とそれをGrassmann数で行ったGauss積分\begin{equation} \int d^{N}\xi d^{N}\eta e^{\eta_{i}A_{ij}\xi_{j}}=\det A \end{equation}のこと。}
+逆数でない$\Delta_{FP}$の経路積分を用いた計算方法を知っている。
+すなわち、交換する積分変数を反交換する場に変える。
+\begin{align}
+  \beta_{\alpha \beta}& \to b_{\alpha \beta}\\
+  v^{\alpha}&\to c^{\alpha}
+\end{align}
+この$b,c$はともにGrassmann数の場である。すなわち、反交換する。これらはゴースト場として知られる。
+気持ちとしては
+\begin{equation}
+  \Delta^{-1}=\int dv d\beta e^{-\beta \nabla v}=(\det \nabla)^{-1}
+\end{equation}
+だからGrassmann数のGauss積分の公式より
+\begin{equation}
+  \det \nabla= \int d\xi d\eta e^{\eta \nabla \xi}=\Delta 
+\end{equation}
+となる。
+さて、これによってFaddeev-Popov行列式の最終的な式を得る。
+ゴースト作用
+\begin{equation}
+  \label{5.5}S_{\mathrm{ghost}}=\frac{1}{2\pi}\int d^{2}\sigma \sqrt{g}b_{\alpha\beta}\nabla^{\alpha}c^{\beta}
+\end{equation}
+を用いて
+\begin{equation}
+  \Delta_{FP}[g]=\sint{b}\mathcal{D}c \, \exp[iS_{\mathrm{ghost}}]
+\end{equation}
+のように表せる。なお、$b,c$はいい感じにリスケールしている。これをEuclid空間に回転させて戻すと$i$の因子は消えて、(\ref{5.3})とともに
+\begin{equation}
+  Z[\hat{g}]=\sint{X}\pms{b}\pms{c} \, \exp\kakko{-S_{P}[X,\hat{g}]-S_{\mathrm{ghost}}[b,c,\hat{g}]}
+\end{equation}
+が完全な分配関数の形である。補助的に導入したゴースト場$b,c$が力学変数となり、$X$と同等の立場となっている。ゲージ固定の代償として余計なゴースト場が出る。
+
+このゴースト場の役割は非物理的なゲージ自由度をキャンセルして$X^{\mu}$を$D-2$個のtransverseモードだけを残すことである。
+光円錐量子化と異なり、Lorentz不変性を保つことのできる方法である。
+\paragraph{Simplifying the Ghost Action}
+ゴースト作用(\ref{5.5})は単純に見える。しかし、共形ゲージ
+\begin{equation}
+  \hat{g}_{\alpha\beta}=e^{2\omega}\delta_{\alpha\beta}
+\end{equation}
+で行えばもっと単純に見える。
+この行列式は$\sqrt{\hat{g}}=e^{2\omega}$である。
+測度は複素座標にて$d^{2}\sigma=\frac{1}{2}d^{2}z$であり、また計量を用いれば共変微分の添字を下げられる。
+\begin{equation}
+  \nabla^{z}=g^{z\bar{z}}\nabla_{\bar{z}}=2e^{-2\omega}\nabla_{\bar{z}}
+\end{equation}
+これでゴースト作用は、$e^{2\omega}$が$g$の行列式と共変微分のところで打ち消されて
+\begin{equation}
+  S_{\mathrm{ghost}}=\frac{1}{2\pi}\int d^{2}z \kakko{b_{zz}\nabla_{\bar{z}}c^{z}+b_{\bar{z}\bar{z}}\nabla_{z}c^{\bar{z}}}
+\end{equation}
+ここで$b_{\alpha\beta}$がトレースレスであることから$b_{z\bar{z}}=0$である。
+\begin{equation}
+  b_{z\bar{z}}=b_{1\bar{z}}+ib_{2\bar{z}}=b_{11}-ib_{12}+i(b_{21}-ib_{22})=(b_{11}+b_{22})+i(b_{21}-b_{12})
+\end{equation}
+$b$は対称であることに注意。ゴースト作用において共変微分が実は通常の微分となる。
+\begin{equation}
+  \nabla_{\bar{z}}c^{z}=\del_{\bar{z}}c^{z}+\Gamma^{z}_{\bar{z}\alpha}c^{\alpha}
+\end{equation}
+に注目してみる。ここで$\alpha=z,\bar{z}$である。このときChristoffel記号は、計量が$g^{z\bar{z}}$以外の成分を持たないことに気をつけて
+\begin{equation}
+  \Gamma^{z}_{\bar{z}\alpha}=\frac{1}{2}g^{z\bar{z}}(\del_{\bar{z}}g_{\alpha \bar{z}}+\del_{\alpha}g_{\bar{z}\bar{z}}-\del_{\bar{z}}g_{\bar{z}\alpha})=\frac{1}{2}g^{z\bar{z}}(\del_{\bar{z}}g_{\alpha \bar{z}}+0-\del_{\bar{z}}g_{\bar{z}\alpha})=0
+\end{equation}
+そのため共形ゲージにおいてゴースト作用が
+\begin{equation}
+  S_{\mathrm{ghost}}=\frac{1}{2\pi}\int d^{2}z \kakko{b_{zz}\del_{\bar{z}}c^{z}+b_{\bar{z}\bar{z}}\del_{z}c^{\bar{z}}}
+\end{equation}
+と、2つの自由な理論に分離される。この作用は共形因子$\omega$に依存しない。
+言い換えると、これは$b,c$を変える必要なしにWeyl不変であり、すなわちこれらはWeyl変換にたいしてどちらも中立である。\footnote{言い換えた側がわからん。中立:ニュートラル＝関わりがない、何も起こらないということ？}
+ただし$b_{\alpha\beta},c^{\alpha}$はWeyl変換のもとで中立だが、添字を上げ下げすると、計量より現れる因子を拾ってしまうので$b^{\alpha\beta},c^{\alpha}$はWeyl変換で中立ではない。
+\subsection{The Ghost CFT}
+Weylと微分同相のゲージ対称性を固定することで、2つの新たな力学的なゴースト場$b,c$が残される。両方ともGrassmann変数である。すなわち、反交換する。
+これらの力学はCFTによって支配される。
+\begin{align}
+  b=b_{zz}\quad ,& \quad \bar{b}=b_{\bar{z}\bar{z}}\\
+  c=c^{z}\quad ,& \quad \bar{c}=c_{\bar{z}}
+\end{align}
+と定義すると、ゴースト作用は次のように書ける。
+\begin{equation}
+  S_{\mathrm{ghost}}=\frac{1}{2\pi}\int d^{2}z \kakko{b\bar{\del}c+\bar{b}\del\bar{c}}
+\end{equation}
+ここから運動方程式として
+\begin{equation}
+  \bar{\del}b=\del\bar{b}=\bar{\del}c=\del\bar{c}=0
+\end{equation}
+が得られる。したがって$b,c$は正則場で、$\bar{b},\bar{c}$は反正則場である。
+
+量子化を行う前に、最後に少しの情報を古典論より必要とする。すなわち、$bc$ゴーストに対するエネルギー運動量テンソルである。4章での一般の定義
+\begin{equation}
+  T^{\alpha\beta}=-\frac{4\pi}{\sqrt{g}}\henbi{S}{g^{\alpha\beta}}
+\end{equation}
+を用いるので、(\ref{5.5})の一般の背景場のもとで行い、計量$g^{\alpha\beta}$で変分する。
+複雑なところは二重になっている。まず共変微分$\nabla^{\alpha}$の中に潜むChristoffel記号の寄与を拾うことになる。次に$b_{\alpha\beta}$がトレースレスであることを思い出す。しかしこれは計量に依存するそれ自身の条件であった。すなわち、$b_{\alpha\beta}g^{\alpha\beta}=0$に由来する。
+このことを考慮し、トレースレス性を課してLagrange乗数を作用に加えるべきである。
+適切に計量を変文したあと、平坦な空間に戻ると最終的な結果はより単純なものとなっている。
+どの共形理論でも成り立たなければならないように、$T_{z\bar{z}}=0$を得る。
+一方、エネルギー運動量テンソルの正則と反正則な部分は次の形で与えられる。
+\begin{equation}
+  T=2(\del c)b+c \del b\quad , \quad \bar{T}=2(\bar{\del} \bar{c})b+\bar{c} \bar{\del} \bar{b}
+\end{equation}
+↑導けない！Christoffel記号とトレースレス性を考慮しないとだめらしいけど死ぬほど面倒くさい。
+\paragraph{OPE}
+通常の経路積分の技法を用いてOPEを計算する。
+以下ではCFTの正則部に注目する。
+例えば、
+\begin{equation}
+  0=\int \pms{b}\pms{c}\frac{\delta }{\delta b(\sigma)}\kkakko{e^{-S_{\mathrm{ghost}}}b(\sigma')}=\int \pms{b}\pms{c}e^{-S_{\mathrm{ghost}}}\kkakko{-\frac{1}{2\pi}\bar{\del }c(\sigma)b(\sigma')+\delta(\sigma-\sigma')}
+\end{equation}
+が得られる。\footnote{$=0$はどこから？期待値を出すから微分したらゼロ？}前半部は$S_{\mathrm{ghost}}$の運動方程式から従う。これより
+\begin{equation}
+  \bar{\del}c(\sigma)b(\sigma')=2\pi\, \delta (\sigma-\sigma')
+\end{equation}
+である。また$\delta /\delta c(\sigma)$について見れば
+\begin{equation}
+  \bar{\del}b(\sigma)c(\sigma')=2\pi\, \delta (\sigma-\sigma')
+\end{equation}
+$\bar{\del}(1/z)=2\pi\delta (z,\bar{z})$を使って積分すればOPEが得られる。
+$\sigma,\sigma'$を$z,w$に置き換えて
+\begin{align}
+\label{opebc} b(z)c(w)&=\frac{1}{z-w}+\cdots \\
+\label{opecb}  c(w)b(z)&=\frac{1}{w-z}+\cdots 
+\end{align}
+実際は2番目の式は1番目の式より従い、Fermi統計である。
+$bb,cc$は特異部を持たず、$z \to w$で消滅する。
+
+最後にこの理論のエネルギー運動量テンソルが欲しい。正規順序を取れば
+\begin{equation}
+  T(z)=2:\del c(z)b(z):+:c(z)\del b(z):
+\end{equation}
+である。この選択で$b,c$はWeylスケーリングで中立なテンソル場について正しいウェイトをもつことをすぐに示す。
+
+
+\paragraph{Primary Fields}
+$b,c$がそれぞれウェイト$h=2,h=-1$を持つprimary場であることを示す。
+まず$c$を見る。
+
+\begin{equation}
+  T(z)c(w)=2:\del c(z)b(z):c(w)+:c(z)\del b(z):c(w)
+\end{equation}
+前半部分は(\ref{opebc})をそのまま使い、
+後半は(\ref{opebc})を両辺$z$微分した
+\begin{equation}
+  \del b(z)c(w)=-\frac{1}{(z-w)^2}+\cdots 
+\end{equation}
+を用いる。よって
+\begin{equation}
+  T(z)c(w)=\frac{2\del c(z)}{z-w}-\frac{c(z)}{(z-w)^2}+\cdots =-\frac{c(w)}{(z-w)^2}+\frac{2\del c(w)}{z-w}+\cdots 
+\end{equation}
+となる。なお、最後の式変形では$c(z)$を$z=w$まわりで展開した$c(z)=c(w)+\del c(w)(z-w)+\cdots$を使った。$T(z)c(w)$だから$c(w)$であってほしい、ということだと思う。これより$c$はウェイト$h=-1$とわかる。
+次に$b$について考える。$b,c$を入れ替えるときは反対称であることに注意する。
+\begin{equation}
+  T(z)b(w)=2:\del c(z)b(z):b(w)+:c(z)\del b(z):b(w)=-2b(z)\del c(z)b(w)-\del b(z)c(z)b(w)
+\end{equation}
+$c$のときと同様に(\ref{opecb})を両辺$z$微分して
+\begin{equation}
+  \del c(z)b(w)=-\frac{1}{(z-w)^2}+\cdots 
+\end{equation}
+を使えば、
+\begin{equation}
+  T(z)b(w)=-2b(z)\kakko{\frac{-1}{(z-w)^2}}-\frac{\del b(z)}{z-w}=\frac{2b(w)}{(z-w)^2}+\frac{\del b(w)}{z-w}+\cdots
+\end{equation}
+これより$b$はウェイト$h=2$を持つ。何度も指摘している通り共形＝微分同相＋Weylである。
+$b,c$はWeyl変換のもとで中立である。
+これはそれらの添字構造$b_{zz},c^{z}$によって決定される微分同相によるウェイトに反映されている。\footnote{どういうこと?}
+\paragraph{The Central Charge}
+
+
+最後に$TT$ OPEを計算して$bc$ゴースト系のcentral chargeを決定する。
+\begin{align}
+  T(z)T(w)=& (2:\del c(z)b(z):+:c(z)\del b(z):)(2:\del c(w)b(w):+:c(w)\del b(w):)\\
+  =&  4:\del c(z)b(z)::\del c(w) b(w):+2:\del c(z)b(z)::c(w)\del b(w):\notag \\
+  &+ 2:c(z)\del b(z)::\del c(w)b(w): + :c(z)\del b(z)::c(w)\del b(w):
+\end{align}
+計算は面倒だから書かない。Wick縮約と同じような感じで計算すると楽。
+縮約取ってOPE作って……とする過程は同じだが、1つだけ縮約を取るときと、2つの縮約を取るときとで分けて考えないと間違える。
+また引数が$z$の部分は$z=w$まわりのTaylor展開を考える。この際、$\del b, \del c$についてはきちんと2階微分の項まで考慮に入れるとよい。
+2つ縮約を取る部分からは$ -13(z-w)^{-4} $、1つ縮約を取る部分からは$ 2T(w)(z-w)^{-2}+\del T(w)(z-w)^{-1} $が出る。したがって
+\begin{equation}
+  T(z)T(w)=\frac{-13}{(z-w)^{4}}+\frac{2T(w)}{(z-w)^2}+\frac{\del T(w)}{z-w}+\cdots 
+\end{equation}
+を得る。central chargeとは$(z-w)^{-4}$係数である$c/2$を見るものだった。すなわち、$bc$ゴースト系においては上の表式によって
+\begin{equation}
+  c=-26
+\end{equation}
+とわかる。
+\begin{thebibliography}{99}
+  \bibitem{ref1} David Tong,Lectures on String Theory,
+  \url{http://www.damtp.cam.ac.uk/user/tong/string.html}
+\end{thebibliography}
+\end{document}
